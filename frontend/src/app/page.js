@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from 'next/image';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/navbar';
 import Footer from "../components/footer";
 import Link from 'next/link';
 
