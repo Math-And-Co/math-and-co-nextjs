@@ -1,6 +1,6 @@
 "use client";
 import Footer from "../../components/footer";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/navbar";
 import React, { useState } from "react";
 
 const EducationPage = () => {
