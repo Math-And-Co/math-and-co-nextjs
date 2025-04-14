@@ -1,7 +1,7 @@
 "use client";
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 
 function ShopPage() {
