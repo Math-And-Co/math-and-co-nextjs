@@ -73,9 +73,9 @@ function ShopPage() {
     });
 
   return (
-    <Suspense>
-      <Navbar cart={cart} setIsCartOpen={setIsCartOpen}/>
-      
+    <>
+      <Navbar cart={cart} setIsCartOpen={setIsCartOpen} />
+
       {/* Updated Gradient Header Section */}
       <div className="w-full bg-gradient-to-r from-[#d4b26a] to-black text-white py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -100,7 +100,7 @@ function ShopPage() {
             </h1>
 
             {/* Updated Filter Styling to Match Blog */}
-             <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3">
               <div className="relative">
                 <select
                   className={`px-4 py-2 rounded-full text-sm transition-colors appearance-none pr-8 bg-gradient-to-r from-[#d4b26a] to-black text-white`}
@@ -148,29 +148,31 @@ function ShopPage() {
                 </div>
               </div>
             </div>
-         
+
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredWines.map((wine) => (
-              <div key={wine.id} className="bg-[#f9f9f9] p-6 rounded-lg flex flex-col justify-between hover:shadow-lg transition-shadow">
-                <img
-                  src={wine.image_url}
-                  alt={`Bottle of ${wine.name}`}
-                  className="w-full h-64 object-contain rounded-lg mb-4 hover:scale-105 transition-transform"
-                />
-                <h3 className="text-xl font-crimson-text mb-2">{wine.name}</h3>
-                <p className="text-gray-600 mb-4">{wine.taste}</p>
-                <div className="flex justify-between items-center mt-4">
-                  <span className="text-xl">R{wine.price.toFixed(2)}</span>
-                  <button
-                    className="bg-[#d4b26a] text-white px-4 py-2 rounded hover:bg-[#c4a25a] transition-colors"
-                    onClick={() => setCart([...cart, wine])}
-                  >
-                    <i className="fas fa-shopping-cart text-xl"></i>
-                  </button>
+              <Suspense>
+                <div key={wine.id} className="bg-[#f9f9f9] p-6 rounded-lg flex flex-col justify-between hover:shadow-lg transition-shadow">
+                  <img
+                    src={wine.image_url}
+                    alt={`Bottle of ${wine.name}`}
+                    className="w-full h-64 object-contain rounded-lg mb-4 hover:scale-105 transition-transform"
+                  />
+                  <h3 className="text-xl font-crimson-text mb-2">{wine.name}</h3>
+                  <p className="text-gray-600 mb-4">{wine.taste}</p>
+                  <div className="flex justify-between items-center mt-4">
+                    <span className="text-xl">R{wine.price.toFixed(2)}</span>
+                    <button
+                      className="bg-[#d4b26a] text-white px-4 py-2 rounded hover:bg-[#c4a25a] transition-colors"
+                      onClick={() => setCart([...cart, wine])}
+                    >
+                      <i className="fas fa-shopping-cart text-xl"></i>
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </Suspense>
             ))}
           </div>
         </main>
@@ -242,7 +244,7 @@ function ShopPage() {
         )}
       </div>
       <Footer />
-    <Suspense/>
+    </>
   );
 }
 
