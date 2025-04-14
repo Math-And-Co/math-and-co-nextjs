@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 
@@ -73,7 +73,7 @@ function ShopPage() {
     });
 
   return (
-    <>
+    <Suspense>
       <Navbar cart={cart} setIsCartOpen={setIsCartOpen}/>
       
       {/* Updated Gradient Header Section */}
@@ -242,7 +242,7 @@ function ShopPage() {
         )}
       </div>
       <Footer />
-    </>
+    <Suspense/>
   );
 }
 
