@@ -4,10 +4,10 @@ import { useEffect, useState, Suspense } from 'react';
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 
-function ShopPage() {
-  const [isCartOpen, setIsCartOpen] = useState(false);
+// Component that uses useSearchParams
+function ShopContent({ cart, setCart, isCartOpen, setIsCartOpen }) {
   const searchParams = useSearchParams();
-  const [wines, setWines] = useState([
+  const [wines] = useState([
     {
       id: 1,
       name: "MCC Nectar",
@@ -42,7 +42,6 @@ function ShopPage() {
     },
   ]);
 
-  const [cart, setCart] = useState([]);
   const [filters, setFilters] = useState({
     type: searchParams.get('type') || "all",
     priceRange: "all",
@@ -74,8 +73,6 @@ function ShopPage() {
 
   return (
     <>
-      <Navbar cart={cart} setIsCartOpen={setIsCartOpen} />
-
       {/* Updated Gradient Header Section */}
       <div className="w-full bg-gradient-to-r from-[#d4b26a] to-black text-white py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -99,7 +96,7 @@ function ShopPage() {
               {filters.type === 'all' ? 'Our Wines' : `${filters.type === 'MCC' ? 'Sparkling' : filters.type} Wines`}
             </h1>
 
-            {/* Updated Filter Styling to Match Blog */}
+            {/* Filter Controls */}
             <div className="flex flex-wrap gap-3">
               <div className="relative">
                 <select
@@ -135,7 +132,7 @@ function ShopPage() {
 
               <div className="relative">
                 <select
-                  className={`px-4 py-2 rounded-full text-sm t transition-colors appearance-none pr-4 bg-gradient-to-r from-[#d4b26a] to-black text-white`}
+                  className={`px-4 py-2 rounded-full text-sm transition-colors appearance-none pr-4 bg-gradient-to-r from-[#d4b26a] to-black text-white`}
                   value={filters.sort}
                   onChange={(e) => setFilters({ ...filters, sort: e.target.value })}
                 >
@@ -148,34 +145,34 @@ function ShopPage() {
                 </div>
               </div>
             </div>
-
           </div>
 
+          {/* Wine Listings */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredWines.map((wine) => (
-              <Suspense>
-                <div key={wine.id} className="bg-[#f9f9f9] p-6 rounded-lg flex flex-col justify-between hover:shadow-lg transition-shadow">
-                  <img
-                    src={wine.image_url}
-                    alt={`Bottle of ${wine.name}`}
-                    className="w-full h-64 object-contain rounded-lg mb-4 hover:scale-105 transition-transform"
-                  />
-                  <h3 className="text-xl font-crimson-text mb-2">{wine.name}</h3>
-                  <p className="text-gray-600 mb-4">{wine.taste}</p>
-                  <div className="flex justify-between items-center mt-4">
-                    <span className="text-xl">R{wine.price.toFixed(2)}</span>
-                    <button
-                      className="bg-[#d4b26a] text-white px-4 py-2 rounded hover:bg-[#c4a25a] transition-colors"
-                      onClick={() => setCart([...cart, wine])}
-                    >
-                      <i className="fas fa-shopping-cart text-xl"></i>
-                    </button>
-                  </div>
+              <div key={wine.id} className="bg-[#f9f9f9] p-6 rounded-lg flex flex-col justify-between hover:shadow-lg transition-shadow">
+                <img
+                  src={wine.image_url}
+                  alt={`Bottle of ${wine.name}`}
+                  className="w-full h-64 object-contain rounded-lg mb-4 hover:scale-105 transition-transform"
+                />
+                <h3 className="text-xl font-crimson-text mb-2">{wine.name}</h3>
+                <p className="text-gray-600 mb-4">{wine.taste}</p>
+                <div className="flex justify-between items-center mt-4">
+                  <span className="text-xl">R{wine.price.toFixed(2)}</span>
+                  <button
+                    className="bg-[#d4b26a] text-white px-4 py-2 rounded hover:bg-[#c4a25a] transition-colors"
+                    onClick={() => setCart([...cart, wine])}
+                  >
+                    <i className="fas fa-shopping-cart text-xl"></i>
+                  </button>
                 </div>
-              </Suspense>
+              </div>
             ))}
           </div>
         </main>
+
+        {/* Cart Modal */}
         {isCartOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
             <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white p-6">
@@ -232,7 +229,6 @@ function ShopPage() {
                     </div>
                     <button
                       className="w-full bg-[#d4b26a] text-white py-2 rounded hover:bg-[#c4a25a] transition-colors"
-                      onClick={() => setCheckoutStep(1)}
                     >
                       Proceed to Checkout
                     </button>
@@ -243,9 +239,30 @@ function ShopPage() {
           </div>
         )}
       </div>
-      <Footer />
     </>
   );
 }
 
-export default ShopPage;
+// Main page component
+export default function ShopPage() {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cart, setCart] = useState([]);
+
+  return (
+    <>
+      <Navbar cart={cart} setIsCartOpen={setIsCartOpen} />
+      
+      {/* Wrap ShopContent in Suspense */}
+      <Suspense fallback={<div className="text-center py-20">Loading shop...</div>}>
+        <ShopContent 
+          cart={cart} 
+          setCart={setCart}
+          isCartOpen={isCartOpen}
+          setIsCartOpen={setIsCartOpen}
+        />
+      </Suspense>
+      
+      <Footer />
+    </>
+  );
+}
