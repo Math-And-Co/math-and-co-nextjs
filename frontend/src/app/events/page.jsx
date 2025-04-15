@@ -170,14 +170,33 @@ function MainComponent() {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [bookingData, setBookingData] = useState({
     experience: "",
+    eventName: "",
+    eventType: "",
+    price: 0,
     date: "",
     time: "",
     guests: 1,
     name: "",
     email: "",
     phone: "",
-    specialRequests: ""
+    specialRequests: "",
+    availableTimes: []
   });
+
+  const initialBookingState = {
+    experience: "",
+    eventName: "",
+    eventType: "",
+    price: 0,
+    date: "",
+    time: "",
+    guests: 1,
+    name: "",
+    email: "",
+    phone: "",
+    specialRequests: "",
+    availableTimes: []
+  };
 
   // Educational materials state
   const [showMaterialModal, setShowMaterialModal] = useState(false);
@@ -275,11 +294,14 @@ function MainComponent() {
     }
   };
 
-  const handleBookingClick = (experience) => {
+  const handleBookingClick = (experience, customPrice = null) => {
     setBookingData({
-      ...bookingData,
+      ...initialBookingState,
       experience: experience.title,
-      price: experience.price
+      eventName: experience.title,
+      eventType: experience.type || "private", // default to private for event planner
+      price: customPrice !== null ? customPrice : experience.price,
+      availableTimes: experience.availableTimes || []
     });
     setShowBookingModal(true);
   };
@@ -297,12 +319,12 @@ function MainComponent() {
   //   // Reset form or show success message
   // };
 
-   // State for form validation
-   const [errors, setErrors] = useState({});
-   const [isSubmitted, setIsSubmitted] = useState(false);
-   const [isLoading, setIsLoading] = useState(false);
- 
-   // Booking modal state with initial validation states
+  // State for form validation
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Booking modal state with initial validation states
   //  const [bookingData, setBookingData] = useState({
   //    eventName: "",
   //    eventType: "",
@@ -322,115 +344,96 @@ function MainComponent() {
   //    emailValid: false,
   //    phoneValid: false
   //  });
- 
-   // Validate email format
-   const validateEmail = (email) => {
-     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-     return re.test(email);
-   };
- 
-   // Validate phone number (basic validation)
-   const validatePhone = (phone) => {
-     const re = /^[0-9]{10,15}$/;
-     return re.test(phone);
-   };
- 
-   // Validate all fields
-   const validateForm = () => {
-     const newErrors = {};
-     
-     if (!bookingData.date) newErrors.date = "Please select a date";
-     if (!bookingData.time) newErrors.time = "Please select a time";
-     if (bookingData.guests < 1 || bookingData.guests > 12) newErrors.guests = "Please enter 1-12 guests";
-     if (!bookingData.name.trim()) newErrors.name = "Please enter your name";
-     if (!validateEmail(bookingData.email)) newErrors.email = "Please enter a valid email";
-     if (!validatePhone(bookingData.phone)) newErrors.phone = "Please enter a valid phone number";
-     
-     setErrors(newErrors);
-     return Object.keys(newErrors).length === 0;
-   };
- 
-   // Handle field changes with validation
-   const handleInputChange = (field, value) => {
-     let isValid = true;
-     
-     switch(field) {
-       case 'email':
-         isValid = validateEmail(value);
-         break;
-       case 'phone':
-         isValid = validatePhone(value);
-         break;
-       case 'name':
-         isValid = value.trim().length > 0;
-         break;
-       case 'guests':
-         isValid = value >= 1 && value <= 12;
-         break;
-       case 'date':
-         isValid = value !== "";
-         break;
-       case 'time':
-         isValid = value !== "";
-         break;
-     }
-     
-     setBookingData({
-       ...bookingData,
-       [field]: value,
-       [`${field}Valid`]: isValid
-     });
-   };
- 
-   // Handle form submission
-   const handleBookingSubmit = async (e) => {
-     e.preventDefault();
-     setIsSubmitted(true);
-     
-     if (validateForm()) {
-       setIsLoading(true);
-       try {
-         // Simulate API call
-         await new Promise(resolve => setTimeout(resolve, 1000));
-         console.log("Booking submitted:", bookingData);
-         // Show success message or redirect
-         setShowBookingModal(false);
-         // Reset form
-         setBookingData({
-           ...initialBookingState,
-           eventName: bookingData.eventName,
-           eventType: bookingData.eventType,
-           price: bookingData.price
-         });
-         setIsSubmitted(false);
-       } catch (error) {
-         console.error("Booking error:", error);
-       } finally {
-         setIsLoading(false);
-       }
-     }
-   };
- 
-   // Initial booking state
-   const initialBookingState = {
-     eventName: "",
-     eventType: "",
-     price: 0,
-     date: "",
-     time: "",
-     guests: 1,
-     name: "",
-     email: "",
-     phone: "",
-     specialRequests: "",
-     dateValid: false,
-     timeValid: false,
-     guestsValid: true,
-     nameValid: false,
-     emailValid: false,
-     phoneValid: false
-   };
- 
+
+  // Validate email format
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  // Validate phone number (basic validation)
+  const validatePhone = (phone) => {
+    const re = /^[0-9]{10,15}$/;
+    return re.test(phone);
+  };
+
+  // Validate all fields
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!bookingData.date) newErrors.date = "Please select a date";
+    if (!bookingData.time) newErrors.time = "Please select a time";
+    if (bookingData.guests < 1 || bookingData.guests > 12) newErrors.guests = "Please enter 1-12 guests";
+    if (!bookingData.name.trim()) newErrors.name = "Please enter your name";
+    if (!validateEmail(bookingData.email)) newErrors.email = "Please enter a valid email";
+    if (!validatePhone(bookingData.phone)) newErrors.phone = "Please enter a valid phone number";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle field changes with validation
+  const handleInputChange = (field, value) => {
+    let isValid = true;
+
+    switch (field) {
+      case 'email':
+        isValid = validateEmail(value);
+        break;
+      case 'phone':
+        isValid = validatePhone(value);
+        break;
+      case 'name':
+        isValid = value.trim().length > 0;
+        break;
+      case 'guests':
+        isValid = value >= 1 && value <= 12;
+        break;
+      case 'date':
+        isValid = value !== "";
+        break;
+      case 'time':
+        isValid = value !== "";
+        break;
+    }
+
+    setBookingData({
+      ...bookingData,
+      [field]: value,
+      [`${field}Valid`]: isValid
+    });
+  };
+
+  // Handle form submission
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+
+    if (validateForm()) {
+      setIsLoading(true);
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log("Booking submitted:", bookingData);
+        // Show success message or redirect
+        setShowBookingModal(false);
+        // Reset form
+        setBookingData({
+          ...initialBookingState,
+          eventName: bookingData.eventName,
+          eventType: bookingData.eventType,
+          price: bookingData.price
+        });
+        setIsSubmitted(false);
+      } catch (error) {
+        console.error("Booking error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+
 
 
   return (
@@ -441,7 +444,7 @@ function MainComponent() {
           <div className="max-w-7xl mx-auto text-center">
             <div className="inline-block relative">
               <h1 className="text-5xl md:text-6xl font-bold mb-4 relative z-10">
-                Wine Estate <span className="text-[#d4b26a]">Events</span>
+                Our <span className="text-[#d4b26a]">Events</span>
               </h1>
               <div className="absolute -bottom-2 left-0 right-0 h-3 bg-amber-100/70 z-0"></div>
             </div>
@@ -508,27 +511,32 @@ function MainComponent() {
             ))}
           </div>
 
-          {/* Updated Month Filters with Sort */}
-          <div className="flex flex-wrap gap-4 mb-8 justify-between items-center">
-            <div className="flex flex-wrap gap-3  items-center">
-              {monthNames.map((month, index) => (
-                <button
-                  key={month}
-                  onClick={() => setSelectedMonth(index)}
-                  className={`px-4 py-2 rounded-full text-sm transition-colors ${selectedMonth === index
-                    ? "bg-gradient-to-r from-[#d4b26a]  to-black text-white"
-                    : "bg-gray-100 hover:bg-gray-200"
-                    }`}
-                >
-                  {month}
-                </button>
-              ))}
+          {/* Updated Month Filters with Centered Layout on Desktop */}
+          <div className="flex flex-col gap-4 mb-8">
+            {/* Month Filters Container - Now Centered on Desktop */}
+            <div className="w-full flex justify-center">
+              <div className="flex flex-nowrap gap-3 overflow-x-auto pb-2 md:overflow-visible md:flex-wrap md:justify-center">
+                {monthNames.map((month, index) => (
+                  <button
+                    key={month}
+                    onClick={() => setSelectedMonth(index)}
+                    className={`flex-shrink-0 px-4 py-2 rounded-full text-sm transition-colors ${selectedMonth === index
+                      ? "bg-gradient-to-r from-[#d4b26a] to-black text-white"
+                      : "bg-gray-100 hover:bg-gray-200"
+                      }`}
+                  >
+                    {month}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex gap-4">
+
+            {/* Sort Dropdown - Still Aligned Right */}
+            <div className="flex justify-end">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-gradient-to-r from-[#d4b26a]  to-black text-white px-4 py-2 rounded-lg border border-gray-200 bg-white"
+                className="bg-gradient-to-r from-[#d4b26a] to-black text-white px-4 py-2 rounded-lg border border-gray-200"
               >
                 <option value="date" className="text-black">Sort by Date</option>
                 <option value="price" className="text-black">Sort by Price</option>
@@ -552,7 +560,7 @@ function MainComponent() {
                   <h3 className="text-xl font-crimson-text mb-2">
                     {event.title}
                   </h3>
-                  <wbr className="text-gray-600 mb-4"/>{event.description}<wbr/>
+                  <wbr className="text-gray-600 mb-4" />{event.description}<wbr />
                   <div className="flex justify-between items-center">
                     <div>
                       <span className="text-[#d4b26a] font-bold">
@@ -582,7 +590,7 @@ function MainComponent() {
           </div>
 
           {/* Educational Series Section */}
-          <section className="mb-20 mt-8">
+          {/* <section className="mb-20 mt-8">
             <h2 className="text-3xl font-crimson-text text-center mb-12">
               Educational Series
             </h2>
@@ -607,7 +615,7 @@ function MainComponent() {
                 </div>
               ))}
             </div>
-          </section>
+          </section> */}
 
           <div className="mt-16 text-center">
             <h2 className="text-3xl font-crimson-text mb-6">
@@ -645,7 +653,14 @@ function MainComponent() {
                 </button>
               </div>
             </div>
-            <button className="mt-8 bg-[#d4b26a] text-white px-8 py-3 rounded-lg hover:bg-[#c4a25a] transition-colors">
+            <button
+              onClick={() => handleBookingClick({
+                title: "Private Event Inquiry",
+                type: "private",
+                availableTimes: []
+              }, 150)}
+              className="mt-8 bg-[#d4b26a] text-white px-8 py-3 rounded-lg hover:bg-[#c4a25a] transition-colors"
+            >
               Contact Event Planner
             </button>
           </div>
@@ -653,213 +668,207 @@ function MainComponent() {
 
         {/* Booking Modal */}
         {showBookingModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full p-6">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h3 className="text-2xl font-bold">{bookingData.eventName}</h3>
-                <p className="text-gray-600 capitalize">{bookingData.eventType} Experience</p>
-              </div>
-              <button 
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto relative">
+              <button
                 onClick={() => {
                   setShowBookingModal(false);
                   setErrors({});
                   setIsSubmitted(false);
                 }}
-                className="text-gray-500 hover:text-gray-700"
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-50 bg-white rounded-full p-2"
               >
-                <i className="fas fa-times"></i>
+                <i className="fas fa-times text-2xl"></i>
               </button>
-            </div>
-            
-            <form onSubmit={handleBookingSubmit} noValidate>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Left Column - Booking Details */}
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-[#6B2737] border-b pb-2">
-                    Booking Details
-                  </h4>
-                  
+
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6 pt-2">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Date <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${
-                        (isSubmitted && errors.date) ? 'border-red-500' : ''
-                      }`}
-                      value={bookingData.date}
-                      onChange={(e) => handleInputChange('date', e.target.value)}
-                      min={new Date().toISOString().split('T')[0]}
-                      required
-                    />
-                    {isSubmitted && errors.date && (
-                      <p className="mt-1 text-sm text-red-600">{errors.date}</p>
-                    )}
+                    <h3 className="text-2xl font-bold">{bookingData.eventName}</h3>
+                    <p className="text-gray-600 capitalize">{bookingData.eventType} Experience</p>
+                  </div>
+                </div>
+
+                <form onSubmit={handleBookingSubmit} noValidate>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Left Column - Booking Details */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-[#6B2737] border-b pb-2">
+                        Booking Details
+                      </h4>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Date <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="date"
+                          className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${(isSubmitted && errors.date) ? 'border-red-500' : ''
+                            }`}
+                          value={bookingData.date}
+                          onChange={(e) => handleInputChange('date', e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                          required
+                        />
+                        {isSubmitted && errors.date && (
+                          <p className="mt-1 text-sm text-red-600">{errors.date}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Time <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${(isSubmitted && errors.time) ? 'border-red-500' : ''
+                            }`}
+                          value={bookingData.time}
+                          onChange={(e) => handleInputChange('time', e.target.value)}
+                          required
+                        >
+                          <option value="">Select a time</option>
+                          {bookingData.availableTimes && bookingData.availableTimes.map(time => (
+                            <option key={time} value={time}>{time}</option>
+                          ))}
+                        </select>
+                        {isSubmitted && errors.time && (
+                          <p className="mt-1 text-sm text-red-600">{errors.time}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Number of Guests <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="12"
+                          className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${(isSubmitted && errors.guests) ? 'border-red-500' : ''
+                            }`}
+                          value={bookingData.guests}
+                          onChange={(e) => handleInputChange('guests', parseInt(e.target.value))}
+                          required
+                        />
+                        {isSubmitted && errors.guests && (
+                          <p className="mt-1 text-sm text-red-600">{errors.guests}</p>
+                        )}
+                      </div>
+
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <div className="flex justify-between mb-1">
+                          <span className="text-gray-600">Price per person:</span>
+                          <span className="font-medium">R{bookingData.price}</span>
+                        </div>
+                        <div className="flex justify-between font-semibold text-lg">
+                          <span>Total:</span>
+                          <span className="text-[#6B2737]">
+                            R{bookingData.price * bookingData.guests}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Column - Personal Information */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-[#6B2737] border-b pb-2">
+                        Your Information
+                      </h4>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Full Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${(isSubmitted && errors.name) ? 'border-red-500' : ''
+                            }`}
+                          value={bookingData.name}
+                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          required
+                        />
+                        {isSubmitted && errors.name && (
+                          <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Email Address <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${(isSubmitted && errors.email) ? 'border-red-500' : ''
+                            }`}
+                          value={bookingData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          required
+                        />
+                        {isSubmitted && errors.email && (
+                          <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Phone Number <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="tel"
+                          className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${(isSubmitted && errors.phone) ? 'border-red-500' : ''
+                            }`}
+                          value={bookingData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          required
+                        />
+                        {isSubmitted && errors.phone && (
+                          <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Special Requests
+                        </label>
+                        <textarea
+                          className="w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737]"
+                          rows="3"
+                          placeholder="Dietary restrictions, accessibility needs, etc."
+                          value={bookingData.specialRequests}
+                          onChange={(e) => setBookingData({ ...bookingData, specialRequests: e.target.value })}
+                        />
+                      </div>
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Time <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${
-                        (isSubmitted && errors.time) ? 'border-red-500' : ''
-                      }`}
-                      value={bookingData.time}
-                      onChange={(e) => handleInputChange('time', e.target.value)}
-                      required
+                  <div className="mt-8 pt-4 border-t sticky bottom-0 bg-white">
+                    <button
+                      type="submit"
+                      className={`w-full bg-[#d4b26a] text-white py-3 rounded-lg hover:bg-[#c4a25a]  transition-colors font-medium ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+                        }`}
+                      disabled={isLoading}
                     >
-                      <option value="">Select a time</option>
-                      {events
-                        .find(e => e.title === bookingData.eventName)
-                        ?.availableTimes.map(time => (
-                          <option key={time} value={time}>{time}</option>
-                        ))}
-                    </select>
-                    {isSubmitted && errors.time && (
-                      <p className="mt-1 text-sm text-red-600">{errors.time}</p>
+                      {isLoading ? (
+                        <>
+                          <i className="fas fa-spinner fa-spin mr-2"></i>
+                          Processing...
+                        </>
+                      ) : (
+                        `Confirm Booking for ${bookingData.eventName}`
+                      )}
+                    </button>
+
+                    {isSubmitted && Object.keys(errors).length > 0 && (
+                      <p className="mt-2 text-sm text-red-600 text-center">
+                        Please fix the errors above to continue
+                      </p>
                     )}
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Number of Guests <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="12"
-                      className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${
-                        (isSubmitted && errors.guests) ? 'border-red-500' : ''
-                      }`}
-                      value={bookingData.guests}
-                      onChange={(e) => handleInputChange('guests', parseInt(e.target.value))}
-                      required
-                    />
-                    {isSubmitted && errors.guests && (
-                      <p className="mt-1 text-sm text-red-600">{errors.guests}</p>
-                    )}
-                  </div>
-
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="flex justify-between mb-1">
-                      <span className="text-gray-600">Price per person:</span>
-                      <span className="font-medium">R{bookingData.price}</span>
-                    </div>
-                    <div className="flex justify-between font-semibold text-lg">
-                      <span>Total:</span>
-                      <span className="text-[#6B2737]">
-                        R{bookingData.price * bookingData.guests}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column - Personal Information */}
-                <div className="space-y-4">
-                  <h4 className="text-lg font-semibold text-[#6B2737] border-b pb-2">
-                    Your Information
-                  </h4>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${
-                        (isSubmitted && errors.name) ? 'border-red-500' : ''
-                      }`}
-                      value={bookingData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      required
-                    />
-                    {isSubmitted && errors.name && (
-                      <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email Address <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${
-                        (isSubmitted && errors.email) ? 'border-red-500' : ''
-                      }`}
-                      value={bookingData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      required
-                    />
-                    {isSubmitted && errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      className={`w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737] ${
-                        (isSubmitted && errors.phone) ? 'border-red-500' : ''
-                      }`}
-                      value={bookingData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      required
-                    />
-                    {isSubmitted && errors.phone && (
-                      <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Special Requests
-                    </label>
-                    <textarea
-                      className="w-full p-2 border rounded focus:ring-[#6B2737] focus:border-[#6B2737]"
-                      rows="3"
-                      placeholder="Dietary restrictions, accessibility needs, etc."
-                      value={bookingData.specialRequests}
-                      onChange={(e) => setBookingData({...bookingData, specialRequests: e.target.value})}
-                    />
-                  </div>
-                </div>
+                </form>
               </div>
-
-              <div className="mt-8 pt-4 border-t">
-                <button
-                  type="submit"
-                  className={`w-full bg-[#6B2737] text-white py-3 rounded-lg hover:bg-[#5a1f2d] transition-colors font-medium ${
-                    isLoading ? 'opacity-70 cursor-not-allowed' : ''
-                  }`}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <i className="fas fa-spinner fa-spin mr-2"></i>
-                      Processing...
-                    </>
-                  ) : (
-                    `Confirm Booking for ${bookingData.eventName}`
-                  )}
-                </button>
-                
-                {isSubmitted && Object.keys(errors).length > 0 && (
-                  <p className="mt-2 text-sm text-red-600 text-center">
-                    Please fix the errors above to continue
-                  </p>
-                )}
-              </div>
-            </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
         {/* Educational Material Modal */}
         {showMaterialModal && selectedMaterial && (

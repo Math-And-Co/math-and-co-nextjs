@@ -36,7 +36,7 @@ function BrandPage() {
           <div className="max-w-7xl mx-auto text-center">
             <div className="inline-block relative">
               <h1 className="text-5xl md:text-6xl font-bold mb-4 relative z-10">
-                What Makes <span className="text-[#d4b26a]">Mush&Co</span> Different
+                What Makes <span className="text-[#d4b26a]">Math&Co</span> Different
               </h1>
               <div className="absolute -bottom-2 left-0 right-0 h-3 bg-amber-100/70 z-0"></div>
             </div>
@@ -136,6 +136,100 @@ function BrandPage() {
             <button className="bg-[#d4b26a] hover:bg-[#c0a05a] text-white font-bold py-3 px-8 rounded-full transition-colors">
               Explore Our Collection
             </button>
+          </section>
+
+          {/* Get in Touch Form Section */}
+          <section className="mt-20 bg-gradient-to-r from-[#d4b26a]/10 to-black/10 py-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-[#d4b26a]  mb-4">Get in Touch With Us</h2>
+                <div className="w-24 h-1 bg-[#d4b26a] mx-auto rounded-full"></div>
+                <p className="mt-4 text-gray-600 max-w-2xl mx-auto">
+                  Have questions about our wines? Want to plan a special order? Reach out and we'll respond promptly.
+                </p>
+              </div>
+
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Left Column */}
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Full Name*</label>
+                    <input
+                      type="text"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4b26a] focus:border-[#d4b26a]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+                    <input
+                      type="email"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4b26a] focus:border-[#d4b26a]"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                    <input
+                      type="tel"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4b26a] focus:border-[#d4b26a]"
+                    />
+                  </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4b26a] focus:border-[#d4b26a]">
+                      <option>General Inquiry</option>
+                      <option>Wholesale Orders</option>
+                      <option>Private Events</option>
+                      <option>Wine Recommendations</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Message*</label>
+                    <textarea
+                      rows="4"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#d4b26a] focus:border-[#d4b26a]"
+                      required
+                    ></textarea>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-[#d4b26a] to-black text-white py-3 px-6 rounded-lg hover:from-[#c4a25a] hover:to-gray-800 transition-all font-medium"
+                  >
+                    Send Message
+                  </button>
+                </div>
+              </form>
+
+              {/* Contact Info */}
+              <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div className="p-6 bg-white rounded-lg shadow-sm">
+                  <i className="fas fa-phone-alt text-2xl text-[#d4b26a] mb-3"></i>
+                  <h3 className="font-medium mb-1">Call Us</h3>
+                  <p className="text-gray-600">+27 67 963 4795</p>
+                </div>
+
+                <div className="p-6 bg-white rounded-lg shadow-sm">
+                  <i className="fas fa-envelope text-2xl text-[#d4b26a] mb-3"></i>
+                  <h3 className="font-medium mb-1">Email Us</h3>
+                  <p className="text-gray-600">info@mathandco.com</p>
+                </div>
+
+                <div className="p-6 bg-white rounded-lg shadow-sm">
+                  <i className="fas fa-map-marker-alt text-2xl text-[#d4b26a] mb-3"></i>
+                  <h3 className="font-medium mb-1">Visit Us</h3>
+                  <p className="text-gray-600">93 Bekker Road, Midrand , Thornhill Office Park</p>
+                </div>
+              </div>
+            </div>
           </section>
         </div>
       </div>

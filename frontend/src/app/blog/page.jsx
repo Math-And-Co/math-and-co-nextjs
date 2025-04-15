@@ -59,8 +59,8 @@ export default function BlogPage() {
       ]
     },
     water: {
-      gradient: "bg-gradient-to-r from-[#2A5C82] to-black",
-      color: "#2A5C82",
+      gradient: "bg-gradient-to-r from-[#ddd] to-black",
+      color: "#000",
       accent: "#C0C0C0",
       categories: [
         { id: "all", name: "All Articles", icon: "fa-star" },
@@ -111,8 +111,8 @@ export default function BlogPage() {
   // Filter articles based on category and search query
   const filteredArticles = currentContent.posts.filter(post => {
     const matchesCategory = activeCategory === "all" || post.category === activeCategory;
-    const matchesSearch = searchQuery === "" || 
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    const matchesSearch = searchQuery === "" ||
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
@@ -122,8 +122,8 @@ export default function BlogPage() {
       <Head>
         <title>{activeTab === "wine" ? "Wine Journal" : "Water Science"} | Vine & Spring</title>
         <meta name="description" content={
-          activeTab === "wine" 
-            ? "Expert wine guides, tasting notes and food pairing recommendations" 
+          activeTab === "wine"
+            ? "Expert wine guides, tasting notes and food pairing recommendations"
             : "Water science, hydration research and mineral content analysis"
         } />
       </Head>
@@ -131,26 +131,23 @@ export default function BlogPage() {
       <Navbar />
 
       {/* Hero Section with Tabs */}
-      
+
       {/* Updated Hero Section to Match Shop Page */}
-      <div className={`w-full bg-gradient-to-r ${activeTab === "wine" ? "from-[#d4b26a] " : "from-[#2A5C82]"} to-black text-white py-16 px-4 sm:px-6 lg:px-8`}>
+      <div className={`w-full bg-gradient-to-r ${activeTab === "wine" ? "from-[#d4b26a] to-black" : "from-[#ddd] to-black"} text-white py-16 px-4 sm:px-6 lg:px-8`}>
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-block relative">
             <h1 className="text-5xl md:text-6xl font-bold mb-4 relative z-10">
-              {activeTab === "wine" ? "Wine Journal" : "Water Science"}
-              {activeTab === "wine" && (
-                <span className="text-[#d4b26a]"></span>
-              )}
+              {activeTab === "wine" ? "Wine" : "Water"} <span className="text-[#d4b26a]">Education</span>
             </h1>
             <div className="absolute -bottom-2 left-0 right-0 h-3 bg-amber-100/70 z-0"></div>
           </div>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto mt-4">
-            {activeTab === "wine" 
-              ? "Discover the world of fine wines and perfect pairings" 
+            {activeTab === "wine"
+              ? "Discover the world of fine wines and perfect pairings"
               : "Explore the science behind premium waters and hydration"}
           </p>
           <div className="w-24 h-1 bg-[#d4b26a] mx-auto mt-6 rounded-full"></div>
-          
+
           {/* Tab Switch - Moved Below the Title */}
           <div className="inline-flex rounded-full overflow-hidden bg-white/20 backdrop-blur-sm mt-8">
             <button
@@ -159,11 +156,10 @@ export default function BlogPage() {
                 setActiveCategory("all");
                 setSearchQuery("");
               }}
-              className={`px-6 py-2 flex items-center transition-colors ${
-                activeTab === "wine" 
-                  ? `${contentConfig.wine.gradient} text-[#D4B26A]` 
+              className={`px-6 py-2 flex items-center transition-colors ${activeTab === "wine"
+                  ? `${contentConfig.wine.gradient} text-[#D4B26A]`
                   : "text-white hover:bg-white/10"
-              }`}
+                }`}
             >
               <i className="fas fa-wine-glass-alt mr-2"></i> Wine
             </button>
@@ -173,13 +169,12 @@ export default function BlogPage() {
                 setActiveCategory("all");
                 setSearchQuery("");
               }}
-              className={`px-6 py-2 flex items-center transition-colors ${
-                activeTab === "water" 
-                  ? `${contentConfig.water.gradient} text-[#C0C0C0]` 
+              className={`px-6 py-2 flex items-center transition-colors ${activeTab === "water"
+                  ? `${contentConfig.water.gradient} text-[#C0C0C0]`
                   : "text-white hover:bg-white/10"
-              }`}
+                }`}
             >
-              <i className="fas fa-tint mr-2"></i> Water
+              <i className="fas fa-tint mr-2"></i> Hydrology
             </button>
           </div>
 
@@ -188,18 +183,16 @@ export default function BlogPage() {
             <input
               type="text"
               placeholder={`Search ${activeTab} articles...`}
-              className={`w-full py-3 px-4 rounded-full border ${
-                activeTab === "wine" 
-                  ? "border-black text-black focus:ring-black" 
+              className={`w-full py-3 px-4 rounded-full border ${activeTab === "wine"
+                  ? "border-black text-black focus:ring-black"
                   : "border-white text-white focus:ring-white"
-              } bg-transparent focus:outline-none focus:ring-2 focus:border-transparent`}
+                } bg-transparent focus:outline-none focus:ring-2 focus:border-transparent`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button 
-              className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${
-                activeTab === "water" ? "text-white" : "text-gray-500"
-              }`}
+            <button
+              className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${activeTab === "water" ? "text-white" : "text-gray-500"
+                }`}
             >
               <i className="fas fa-search"></i>
             </button>
@@ -218,11 +211,10 @@ export default function BlogPage() {
                 <button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
-                  className={`px-4 py-2 rounded-full flex items-center text-sm transition-colors ${
-                    activeCategory === category.id 
-                      ? `${currentContent.gradient} text-white` 
+                  className={`px-4 py-2 rounded-full flex items-center text-sm transition-colors ${activeCategory === category.id
+                      ? `${currentContent.gradient} text-white`
                       : "bg-gray-100 hover:bg-gray-200"
-                  }`}
+                    }`}
                 >
                   <i className={`fas ${category.icon} mr-2`}></i>
                   {category.name}
@@ -243,8 +235,8 @@ export default function BlogPage() {
             {filteredArticles.length > 0 ? (
               <div className="grid md:grid-cols-2 gap-6">
                 {filteredArticles.map(post => (
-                  <article 
-                    key={post.id} 
+                  <article
+                    key={post.id}
                     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                   >
                     <img
@@ -253,8 +245,8 @@ export default function BlogPage() {
                       className="w-full h-48 object-cover"
                     />
                     <div className="p-6">
-                      <span 
-                        className="text-sm font-medium" 
+                      <span
+                        className="text-sm font-medium"
                         style={{ color: currentContent.color }}
                       >
                         {currentContent.categories.find(c => c.id === post.category)?.name}
@@ -278,9 +270,8 @@ export default function BlogPage() {
               </div>
             ) : (
               <div className="bg-white rounded-lg shadow-md p-8 text-center">
-                <i className={`fas ${
-                  activeTab === "wine" ? "fa-wine-glass-alt" : "fa-tint"
-                } text-4xl text-gray-300 mb-4`}></i>
+                <i className={`fas ${activeTab === "wine" ? "fa-wine-glass-alt" : "fa-tint"
+                  } text-4xl text-gray-300 mb-4`}></i>
                 <h3 className="text-xl font-bold mb-2">No articles found</h3>
                 <p className="text-gray-600 mb-4">
                   {searchQuery
@@ -306,21 +297,20 @@ export default function BlogPage() {
             {/* Wine Pairings or Water Science */}
             <div className={`rounded-lg p-6 text-white ${currentContent.gradient}`}>
               <h3 className="text-xl font-bold mb-4 flex items-center">
-                <i className={`fas ${
-                  activeTab === "wine" ? "fa-utensils" : "fa-flask"
-                } mr-2`}></i>
+                <i className={`fas ${activeTab === "wine" ? "fa-utensils" : "fa-flask"
+                  } mr-2`}></i>
                 {activeTab === "wine" ? "Pairing Suggestions" : "Science Facts"}
               </h3>
-              
+
               {activeTab === "wine" ? (
                 <ul className="space-y-4">
                   {currentContent.pairingSuggestions.map((item, i) => (
-                    <li 
-                      key={i} 
+                    <li
+                      key={i}
                       className="border-b border-white/20 pb-4 last:border-0 last:pb-0"
                     >
-                      <h4 
-                        className="font-bold" 
+                      <h4
+                        className="font-bold"
                         style={{ color: currentContent.accent }}
                       >
                         {item.wine}
@@ -333,9 +323,9 @@ export default function BlogPage() {
               ) : (
                 <ul className="space-y-4">
                   {currentContent.scienceFacts.map((fact, i) => (
-                    <li 
-                      key={i} 
-                      className="border-b border-white/20 pb-4 last:border-0 last:pb-0"
+                    <li
+                      key={i}
+                      className="border-b border-white/20 pb-4 last:border-0 last:pb-0 "
                     >
                       <p className="mb-1">{fact.fact}</p>
                       <p className="text-sm opacity-80">— {fact.source}</p>

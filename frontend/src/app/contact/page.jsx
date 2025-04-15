@@ -48,7 +48,7 @@ function MainComponent() {
       <Navbar />
       
       {/* Full-width header section */}
-      <div className="w-full bg-black text-white py-16 px-4 sm:px-6 lg:px-8">
+      <div className="w-full bg-gradient-to-r from-[#d4b26a] to-black text-white py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-block relative">
             <h1 className="text-5xl md:text-6xl font-bold mb-4 relative z-10">
@@ -91,7 +91,7 @@ function MainComponent() {
                   Contact Information
                 </h2>
                 <p>
-                  <i className="fas fa-phone mr-2"></i>067 963 4795
+                  <i className="fas fa-phone mr-2"></i>+27 67 963 4795
                 </p>
                 <p>
                   <i className="fas fa-envelope mr-2"></i>info@mathandco.co.za

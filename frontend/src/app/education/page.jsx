@@ -78,8 +78,8 @@ const EducationPage = () => {
       ]
     },
     water: {
-      gradient: "bg-gradient-to-r from-[#2A5C82] to-black",
-      color: "#2A5C82",
+      gradient: "bg-gradient-to-r from-[#ddd] to-black",
+      color: "#000",
       accent: "#C0C0C0",
       filters: [
         { id: "all", name: "All Waters" },
@@ -205,7 +205,7 @@ const EducationPage = () => {
                   : "text-white hover:bg-white/10"
               }`}
             >
-              <i className="fas fa-tint mr-2"></i> Water
+              <i className="fas fa-tint mr-2"></i> Hydrology
             </button>
           </div>
 
